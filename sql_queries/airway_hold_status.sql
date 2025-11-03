@@ -8,17 +8,17 @@ SELECT
     HoldStatus,
     HoldReason,
 
-    -- Extract the TYPE (AFU, ZFU, or NFU)
+    -- Extract the TYPE (AFU, ZFU, or EFU)
     CASE 
         WHEN HoldReason LIKE '%(AFU)%' THEN 'AFU'
         WHEN HoldReason LIKE '%(ZFU)%' THEN 'ZFU'
-        WHEN HoldReason LIKE '%(NFU)%' THEN 'NFU'
+        WHEN HoldReason LIKE '%(EFU)%' THEN 'EFU'
         ELSE NULL
     END AS [TYPE],
 
     -- Extract first date after the TYPE marker and add year
     CASE 
-        WHEN HoldReason LIKE '%(AFU)%' OR HoldReason LIKE '%(ZFU)%' OR HoldReason LIKE '%(NFU)%' THEN
+        WHEN HoldReason LIKE '%(AFU)%' OR HoldReason LIKE '%(ZFU)%' OR HoldReason LIKE '%(EFU)%' THEN
             (SELECT TOP 1 
                 CASE 
                     -- If the date with current year is in the past, use next year
@@ -33,7 +33,7 @@ SELECT
                      CASE 
                          WHEN HoldReason LIKE '%(AFU)%' THEN CHARINDEX('(AFU)', HoldReason) + 5
                          WHEN HoldReason LIKE '%(ZFU)%' THEN CHARINDEX('(ZFU)', HoldReason) + 5
-                         WHEN HoldReason LIKE '%(NFU)%' THEN CHARINDEX('(NFU)', HoldReason) + 5
+                         WHEN HoldReason LIKE '%(EFU)%' THEN CHARINDEX('(EFU)', HoldReason) + 5
                      END,
                      LEN(HoldReason)
                  ),
