@@ -3,6 +3,7 @@ SELECT
     PanNumber,
     DoctorName,
     CONCAT(PatientFirst, ' ', PatientLast) AS PatientName,
+    CAST(CreateDate AS DATE) AS CreateDate,
     CAST(ShipDate AS DATE) AS ShipDate,
     CAST(HoldDate AS DATE) AS HoldDate,
     HoldStatus,
