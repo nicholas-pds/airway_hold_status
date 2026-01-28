@@ -2,6 +2,7 @@
 from pathlib import Path
 from .db_handler import execute_sql_to_dataframe
 from .sheets_handler import SheetsHandler
+from .date_parser import process_dataframe, sort_by_follow_up_date
 
 def main():
     """Main function to orchestrate the daily process."""
@@ -29,11 +30,20 @@ def main():
         return
 
     if not data_df.empty:
+        print(f"\nTotal rows retrieved: {len(data_df)}")
+
+        # Step 2: Parse follow-up dates from HoldReason
+        print("\n--- Parsing Follow-Up Dates ---")
+        data_df = process_dataframe(data_df)
+
+        # Step 3: Sort by FU Date (AFU/ZFU/EFU cases first)
+        print("--- Sorting by Follow-Up Date ---")
+        data_df = sort_by_follow_up_date(data_df)
+
         print("\n--- DataFrame Head ---")
         print(data_df.head())
-        print(f"\nTotal rows retrieved: {len(data_df)}")
         
-        # Step 2: Upload to Google Sheets
+        # Step 4: Upload to Google Sheets
         print("\n--- Uploading to Google Sheets ---")
         
         try:
